@@ -1,0 +1,31 @@
+.line {
+    position: relative;
+}
+
+.line:after {
+    width: 200%;
+    // height: 200%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 0;
+    content: "";
+    -webkit-transform: scale(0.5);
+    -webkit-transform-origin: 0 0;
+    transform: scale(0.5);
+    transform-origin: 0 0;
+    border-top : 1px solid rgba(7,17,21,0.1);
+}
+
+
+.clearfix {
+    display: inline-block;
+    &:after {
+        display: block;
+        content: ".";
+        height: 0;
+        line-height: 0;
+        clear: both;
+        visibility: hidden;
+    }
+}
