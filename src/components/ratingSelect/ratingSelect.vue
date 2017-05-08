@@ -6,7 +6,7 @@
             <div class="rating-type">不满意 6</div>
         </div>
         <div class="bottom">
-            <span class="icon-check_circle icon-is-null"></span>
+            <span class="icon-check_circle icon-is-null" :class='{on:isContent}' @click='getContent'></span>
             <span class="title">只看有内容的评价</span>
         </div>
     </div>
@@ -15,7 +15,14 @@
 export default {
     name: 'ratingSelect',
     data() {
-        return {};
+        return {
+            isContent: false
+        };
+    },
+    methods: {
+        getContent() {
+            this.isContent = !this.isContent;
+        }
     }
 };
 </script>
@@ -57,15 +64,18 @@ export default {
         font-size: 0;
         span {
             display: inline-block;
-            .icon-is-null {
+            &.icon-is-null {
                 vertical-align: top;
                 margin-right: 4px;
                 font-size: 24px;
             }
-            .title {
+            &.title {
                 display: inline-block;
                 vertical-align: top;
                 font-size: 12px;
+            }
+            &.on {
+                color: #00c850;
             }
         }
     }
