@@ -10,6 +10,9 @@ Vue.config.productionTip = false;
 // 给Vue注册HTTP
 Vue.use(VueResource);
 
+// 全局事件管理器
+window.EM = new Vue();
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
