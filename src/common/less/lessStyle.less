@@ -1,0 +1,30 @@
+@widhts : 60px;
+@heights: 100px;
+
+
+
+
+
+
+.imgs(@url: '') {
+    background: url('@{url}_on@2x.png') no-repeat;
+    @media (-webkit-min-device-pixel-ratio: 3), (min-device-pixel-ratio: 3) {
+        background: url('@{url}_on@3x.png') no-repeat;
+    }
+}
+
+
+
+
+// 使用方式
+// .comment {
+//     width: @widhts;
+//     height: @heights;
+//     .imgs('../../views/star48');
+// }
+
+// .comment2 {
+//     width: @widhts;
+//     height: @heights;
+//     .imgs('../../views/star48');
+// }
