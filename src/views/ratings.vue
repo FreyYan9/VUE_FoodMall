@@ -31,6 +31,9 @@
         <div class="ratings-selete-hook">
             <rating-select></rating-select>
         </div>
+        <ul class="comment-list">
+            <li></li>
+        </ul>
     </div>
 </template>
 <script>

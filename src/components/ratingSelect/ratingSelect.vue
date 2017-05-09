@@ -1,9 +1,9 @@
 <template>
     <div class="ratings-select">
         <div class="top  line">
-            <div class="rating-type active">全部 24</div>
-            <div class="rating-type">满意 18</div>
-            <div class="rating-type">不满意 6</div>
+            <div @click='select(2)' :class='{active: selectType == 2}' class="rating-type">全部 24</div>
+            <div @click='select(0)' :class='{active: selectType == 0}' class="rating-type">满意 18</div>
+            <div @click='select(1)' :class='{active: selectType == 1}' class="rating-type">不满意 6</div>
         </div>
         <div class="bottom">
             <span class="icon-check_circle icon-is-null" :class='{on:isContent}' @click='getContent'></span>
@@ -16,12 +16,16 @@ export default {
     name: 'ratingSelect',
     data() {
         return {
-            isContent: false
+            isContent: false,
+            selectType: 2
         };
     },
     methods: {
         getContent() {
             this.isContent = !this.isContent;
+        },
+        select(type) {
+            this.selectType = type;
         }
     }
 };
@@ -57,7 +61,7 @@ export default {
         }
     }
     .bottom {
-        padding: 12px 18px;
+        padding: 12px 18px 12px 0px;
         line-height: 24px;
         border-bottom: 1px solid rgba(7, 17, 27, 0.1);
         color: #93999f;
@@ -81,3 +85,4 @@ export default {
     }
 }
 </style>
+

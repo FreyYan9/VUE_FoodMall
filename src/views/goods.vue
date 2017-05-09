@@ -14,7 +14,7 @@
                 <li class="foods-item foods-item-hook" v-for='item in footList'>
                     <h1 class="foods-item-title"> {{ item.name }} </h1>
                     <ul>
-                        <li class="food-item line" v-for='food in item.foods'>
+                        <li @click="selectGood(food, $event)" class="food-item line" v-for='food in item.foods'>
                             <div>
                                 <img class="food-img" :src="food.icon" alt="">
                             </div>
@@ -36,12 +36,14 @@
             </ul>
         </div>
         <shopcart ref="shopcart" :seller="seller" :select-foods="selectFoods"></shopcart>
+        <goodDetail ref="goodDetail" :good="seletedGood"></goodDetail>
     </div>
 </template>
 <script>
 import IScroll from 'better-scroll';
 import shopcart from 'com/shopcart/shopcart';
 import cartControl from 'com/cartControl/cartControl';
+import goodDetail from './goodDetail';
 
 const ERR_OK = 0;
 export default {
@@ -53,7 +55,8 @@ export default {
             heightList: [],
             menuScroll: {},
             foodsScroll: {},
-            scrollY: 500
+            scrollY: 500,
+            seletedGood: {}
         };
     },
     created() {
@@ -101,6 +104,12 @@ export default {
         },
         addAnimate(el) {
             this.$refs.shopcart.drop(el);
+        },
+        selectGood(good, event) {
+            if (event._constructed) {
+                this.seletedGood = good;
+                this.$refs.goodDetail.show();
+            }
         }
     },
     computed: {
@@ -128,7 +137,8 @@ export default {
     },
     components: {
         shopcart,
-        cartControl
+        cartControl,
+        goodDetail
     }
 };
 </script>

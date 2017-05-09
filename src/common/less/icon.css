@@ -24,6 +24,9 @@
 /*-webkit-font-smoothing: antialiased -moz-osx-font-smoothing: grayscale .icon-arrow_lift:before {
     content: "\e900";
 }*/
+.icon-arrow_lift:before {
+    content: "\E900";
+}
 
 .icon-thumb_up:before {
     content: "\e901";
