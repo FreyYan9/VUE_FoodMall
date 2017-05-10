@@ -18,14 +18,36 @@
                         <s v-show="good.oldPrice">¥ {{ good.oldPrice }}</s>
                     </div>
                 </div>
-                <split></split>
+                <split v-show="good.info"></split>
                 <div v-show="good.info" class="info">
                     <h1 class="title">商品信息</h1>
                     <span>{{ good.info }}</span>
                 </div>
-                <div v-show="good.info" class="info">
-                    <h1 class="title">商品信息</h1>
-                    <span>{{ good.info }}</span>
+                <split></split>
+                <div class="rating">
+                    <h1 class="title">商品评价</h1>
+                    <ratingSelect @select="seleteRate"></ratingSelect>
+                    <div class="content-wrapper">
+                        <ul>
+                            <li v-show="changeRating(item)" v-for="item in good.ratings" class="line">
+                                <div class="top">
+                                    <div class="time">
+                                        {{ item.rateTime | formatDate }}
+                                    </div>
+                                    <div class="user">
+                                        <span class="name">{{ item.username }}</span>
+                                        <img :src="item.avatar" alt="">
+                                    </div>
+                                </div>
+                                <div class="bottom">
+                                    <span :class="{'icon-thumb_up': item.rateType === 0, 'icon-thumb_down': item.rateType===1}"></span> {{ item.text }}
+                                </div>
+                            </li>
+                        </ul>
+                        <!--  <div class="no-rating">
+                            暂无评价
+                        </div> -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -34,6 +56,13 @@
 <script>
 import split from 'com/split/split';
 import IScroll from 'better-scroll';
+import ratingSelect from 'com/ratingSelect/ratingSelect';
+import {
+    formatDate
+} from 'common/js/date';
+// import Vue from 'vue';
+
+const ALL = 2;
 
 export default {
     name: 'GoodDetail',
@@ -44,12 +73,20 @@ export default {
     },
     data() {
         return {
-            showFlag: false
+            showFlag: false,
+            selectType: ALL
         };
     },
+    // mounted() {
+    //     window.EM.$on('changeSelect', function(data) {
+    //         this.selectType = data;
+    //         console.log(data);
+    //     });
+    // },
     methods: {
         show() {
             this.showFlag = true;
+            this.selectType = ALL;
             this.$nextTick(() => {
                 if (!this.detailScorll) {
                     this.detailScorll = new IScroll(this.$refs.detailBS, {
@@ -62,21 +99,41 @@ export default {
         },
         hide() {
             this.showFlag = false;
+        },
+        changeRating(data) {
+            if (this.selectType === ALL) {
+                return true;
+            }
+            if (data.rateType === this.selectType) {
+                return true;
+            }
+            return false;
+        },
+        seleteRate(data) {
+            this.selectType = data;
         }
     },
     components: {
-        split
+        split,
+        ratingSelect
+    },
+    filters: {
+        formatDate(time) {
+            let date = new Date(time);
+            return formatDate(date, 'yyyy-MM-dd hh:mm');
+        }
     }
 };
 </script>
 <style lang='less' scoped>
 .detail-wrapper {
+    font-family: 'PingFang SC', 'STHeitiSC-Light', 'Helvetica-Light', arial, sans-serif;
+    font-weight: normal;
     position: fixed;
     top: 0;
     left: 0;
     bottom: 48px;
     width: 100%;
-    /*height: 300px;*/
     background-color: #fff;
     .detail-content {
         .good-img {
@@ -156,6 +213,56 @@ export default {
                 padding: 0 8px;
                 font-size: 12px;
                 color: #4d555d;
+            }
+        }
+        .rating {
+            padding-top: 18px;
+            h1 {
+                line-height: 14px;
+                margin-left: 18px;
+                font-size: 14px;
+                color: #07111b;
+            }
+            .content-wrapper {
+                padding: 0 18px;
+                li {
+                    padding: 16px 0;
+                    .top {
+                        display: flex;
+                        justify-content: space-between;
+                        margin-bottom: 6px;
+                        .time {
+                            line-height: 12px;
+                            font-size: 10px;
+                            color: #93999f;
+                            vertical-align: top;
+                        }
+                        .user {
+                            line-height: 12px;
+                            display: inline-block;
+                            margin-right: 6px;
+                            vertical-align: top;
+                            font-size: 10px;
+                            color: #93999f;
+                            img {
+                                width: 12px;
+                                height: 12px;
+                                border-radius: 50%;
+                            }
+                        }
+                    }
+                    .bottom {
+                        line-height: 16px;
+                        font-size: 12px;
+                        color: #07111b;
+                        .icon-thumb_up {
+                            color: #00a0dc;
+                        }
+                        .icon-thumb_down {
+                            color: #93999f;
+                        }
+                    }
+                }
             }
         }
     }

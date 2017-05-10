@@ -5,8 +5,8 @@
             <div @click='select(0)' :class='{active: selectType == 0}' class="rating-type">满意 18</div>
             <div @click='select(1)' :class='{active: selectType == 1}' class="rating-type">不满意 6</div>
         </div>
-        <div class="bottom">
-            <span class="icon-check_circle icon-is-null" :class='{on:isContent}' @click='getContent'></span>
+        <div class="bottom" @click='getContent'>
+            <span class="icon-check_circle icon-is-null" :class='{on:isContent}'></span>
             <span class="title">只看有内容的评价</span>
         </div>
     </div>
@@ -26,6 +26,7 @@ export default {
         },
         select(type) {
             this.selectType = type;
+            this.$emit('select', type);
         }
     }
 };
@@ -85,4 +86,3 @@ export default {
     }
 }
 </style>
-
