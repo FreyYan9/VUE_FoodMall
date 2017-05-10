@@ -16,17 +16,18 @@ export default {
     name: 'ratingSelect',
     data() {
         return {
-            isContent: false,
+            isContent: true,
             selectType: 2
         };
     },
     methods: {
         getContent() {
             this.isContent = !this.isContent;
+            window.EM.$emit('checked', this.isContent);
         },
         select(type) {
             this.selectType = type;
-            this.$emit('select', type);
+            window.EM.$emit('select', type);
         }
     }
 };

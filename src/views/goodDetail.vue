@@ -26,7 +26,7 @@
                 <split></split>
                 <div class="rating">
                     <h1 class="title">商品评价</h1>
-                    <ratingSelect @select="seleteRate"></ratingSelect>
+                    <ratingSelect></ratingSelect>
                     <div class="content-wrapper">
                         <ul>
                             <li v-show="changeRating(item)" v-for="item in good.ratings" class="line">
@@ -74,19 +74,25 @@ export default {
     data() {
         return {
             showFlag: false,
-            selectType: ALL
+            selectType: ALL,
+            isContent: true
         };
     },
-    // mounted() {
-    //     window.EM.$on('changeSelect', function(data) {
-    //         this.selectType = data;
-    //         console.log(data);
-    //     });
-    // },
+    mounted() {
+        window.EM.$on('select', function(data) {
+            this.selectType = data;
+        }.bind(this));
+        // 特别注意 使用全局事件管理 必须使用箭头函数接受值或者使用bind(this), 否则数据会绑定到window.EM上去, 并不在当前实例
+        window.EM.$on('checked', (data) => {
+            console.log(data);
+            this.isContent = data;
+        });
+    },
     methods: {
         show() {
             this.showFlag = true;
             this.selectType = ALL;
+            this.isContent = true;
             this.$nextTick(() => {
                 if (!this.detailScorll) {
                     this.detailScorll = new IScroll(this.$refs.detailBS, {
@@ -101,17 +107,18 @@ export default {
             this.showFlag = false;
         },
         changeRating(data) {
-            if (this.selectType === ALL) {
+            if (this.selectType === ALL && data.text) {
                 return true;
             }
             if (data.rateType === this.selectType) {
                 return true;
             }
             return false;
-        },
-        seleteRate(data) {
-            this.selectType = data;
         }
+        // ,
+        // seleteRate(data) {
+        //     this.selectType = data;
+        // }
     },
     components: {
         split,
