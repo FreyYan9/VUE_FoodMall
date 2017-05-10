@@ -17,6 +17,12 @@
                         <span>¥ {{ good.price }}</span>
                         <s v-show="good.oldPrice">¥ {{ good.oldPrice }}</s>
                     </div>
+                    <div class="shopcat-warpper">
+                        <!-- <cartControl :food="good"></cartControl> -->
+                    </div>
+                    <div class="buy">
+                        加入购物车
+                    </div>
                 </div>
                 <split v-show="good.info"></split>
                 <div v-show="good.info" class="info">
@@ -26,9 +32,9 @@
                 <split></split>
                 <div class="rating">
                     <h1 class="title">商品评价</h1>
-                    <ratingSelect></ratingSelect>
+                    <ratingSelect :ratings="good.ratings"></ratingSelect>
                     <div class="content-wrapper">
-                        <ul>
+                        <ul v-show="good.ratings && good.ratings.length">
                             <li v-show="changeRating(item)" v-for="item in good.ratings" class="line">
                                 <div class="top">
                                     <div class="time">
@@ -44,9 +50,9 @@
                                 </div>
                             </li>
                         </ul>
-                        <!--  <div class="no-rating">
+                        <div v-show="!good.ratings || !good.ratings.length" class="no-rating">
                             暂无评价
-                        </div> -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -60,6 +66,7 @@ import ratingSelect from 'com/ratingSelect/ratingSelect';
 import {
     formatDate
 } from 'common/js/date';
+import cartControl from 'com/cartControl/cartControl';
 // import Vue from 'vue';
 
 const ALL = 2;
@@ -84,7 +91,6 @@ export default {
         }.bind(this));
         // 特别注意 使用全局事件管理 必须使用箭头函数接受值或者使用bind(this), 否则数据会绑定到window.EM上去, 并不在当前实例
         window.EM.$on('checked', (data) => {
-            console.log(data);
             this.isContent = data;
         });
     },
@@ -107,9 +113,15 @@ export default {
             this.showFlag = false;
         },
         changeRating(data) {
-            if (this.selectType === ALL && data.text) {
-                return true;
+            this.$nextTick(() => {
+                this.detailScorll.refresh();
+            });
+            if (this.isContent && !data.text) {
+                return false;
             }
+            if (this.selectType === ALL) {
+                return true;
+            };
             if (data.rateType === this.selectType) {
                 return true;
             }
@@ -122,7 +134,8 @@ export default {
     },
     components: {
         split,
-        ratingSelect
+        ratingSelect,
+        cartControl
     },
     filters: {
         formatDate(time) {
@@ -205,6 +218,20 @@ export default {
                 s {
                     font-size: 12px;
                 }
+            }
+            .buy {
+                position: absolute;
+                right: 18px;
+                bottom: 18px;
+                z-index: 10;
+                height: 24px;
+                line-height: 24px;
+                padding: 0 12px;
+                box-sizing: border-box;
+                border-radius: 12px;
+                font-size: 10px;
+                color: #fff;
+                background: #00a0dc;
             }
         }
         .info {

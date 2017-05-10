@@ -1,9 +1,9 @@
 <template>
     <div class="ratings-select">
         <div class="top  line">
-            <div @click='select(2)' :class='{active: selectType == 2}' class="rating-type">全部 24</div>
-            <div @click='select(0)' :class='{active: selectType == 0}' class="rating-type">满意 18</div>
-            <div @click='select(1)' :class='{active: selectType == 1}' class="rating-type">不满意 6</div>
+            <div @click='select(2)' :class='{active: selectType == 2}' class="rating-type">全部 {{ ratings.length }}</div>
+            <div @click='select(0)' :class='{active: selectType == 0}' class="rating-type">满意 {{ positives.length }}</div>
+            <div @click='select(1)' :class='{active: selectType == 1}' class="rating-type">不满意 {{ negatives.length }}</div>
         </div>
         <div class="bottom" @click='getContent'>
             <span class="icon-check_circle icon-is-null" :class='{on:isContent}'></span>
@@ -14,6 +14,14 @@
 <script>
 export default {
     name: 'ratingSelect',
+    props: {
+        ratings: {
+            type: Array,
+            default() {
+                return [];
+            }
+        }
+    },
     data() {
         return {
             isContent: true,
@@ -22,12 +30,28 @@ export default {
     },
     methods: {
         getContent() {
-            this.isContent = !this.isContent;
-            window.EM.$emit('checked', this.isContent);
+            if (event._constructed) {
+                this.isContent = !this.isContent;
+                window.EM.$emit('checked', this.isContent);
+            };
         },
         select(type) {
-            this.selectType = type;
-            window.EM.$emit('select', type);
+            if (event._constructed) {
+                this.selectType = type;
+                window.EM.$emit('select', type);
+            };
+        }
+    },
+    computed: {
+        positives() {
+            return this.ratings.filter((rating) => {
+                return rating.rateType === 0;
+            });
+        },
+        negatives() {
+            return this.ratings.filter((rating) => {
+                return rating.rateType === 1;
+            });
         }
     }
 };
