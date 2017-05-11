@@ -1,11 +1,24 @@
 <template>
-    <div>
-        <h1 style="margin:20% auto; width:100px;"> I am Seller </h1>
+    <div id="seller">
+        <div class="seller-wrapper">
+        	<div class="overview">
+        		<!-- <h1 class="name">{{ seller.name }}</h1> -->
+        		<!-- {{ seller }}1 -->
+        	</div>
+        </div>
     </div>
 </template>
 
 <script>
-    export default {};
+    export default {
+    	name: 'Seller',
+    	// props:{
+    	// 	seller: {
+    	// 		type: Object
+    	// 	}
+    	// }
+    	props: ['seller']
+    };
 </script>
 
 <style lang="less">

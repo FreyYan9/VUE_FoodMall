@@ -72,6 +72,14 @@ export default {
             }
         });
     },
+    mounted() {
+        // 全局事件管理器, 接受 GoodDetail 传输过来的事件
+        window.EM.$on('detailFirst', (el) => {
+            this.$nextTick(() => {
+                this.$refs.shopcart.drop(el);
+            });
+        });
+    },
     methods: {
         _initScroll() {
             this.menuScroll = new IScroll(this.$refs.menuWrapper, {
@@ -103,7 +111,9 @@ export default {
             }
         },
         addAnimate(el) {
-            this.$refs.shopcart.drop(el);
+            this.$nextTick(() => {
+                this.$refs.shopcart.drop(el);
+            });
         },
         selectGood(good, event) {
             if (event._constructed) {

@@ -14,7 +14,9 @@
             </div>
         </div>
         <div class="centent">
-            <router-view :seller="seller"></router-view>
+            <keep-alive>
+                <router-view :seller="seller"></router-view>
+            </keep-alive>
         </div>
     </div>
 </template>

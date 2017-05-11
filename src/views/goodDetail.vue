@@ -18,11 +18,13 @@
                         <s v-show="good.oldPrice">¥ {{ good.oldPrice }}</s>
                     </div>
                     <div class="shopcat-warpper">
-                        <!-- <cartControl :food="good"></cartControl> -->
+                        <cartControl @add="addFirst" :food="good"></cartControl>
                     </div>
-                    <div class="buy">
-                        加入购物车
-                    </div>
+                    <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+                        <div @click='addFirst' v-show="!good.count" class="buy">
+                            加入购物车
+                        </div>
+                    </transition>
                 </div>
                 <split v-show="good.info"></split>
                 <div v-show="good.info" class="info">
@@ -67,7 +69,7 @@ import {
     formatDate
 } from 'common/js/date';
 import cartControl from 'com/cartControl/cartControl';
-// import Vue from 'vue';
+import Vue from 'vue';
 
 const ALL = 2;
 
@@ -113,6 +115,7 @@ export default {
             this.showFlag = false;
         },
         changeRating(data) {
+            // 在数据改变之后重新计算当前容器的高度, 让 Iscroll 能够滚动
             this.$nextTick(() => {
                 this.detailScorll.refresh();
             });
@@ -126,6 +129,13 @@ export default {
                 return true;
             }
             return false;
+        },
+        addFirst(el) {
+            if (!this.good.count) {
+                Vue.set(this.good, 'count', 1);
+            }
+            // 第一次添加到购物车, 调用小球动画
+            window.EM.$emit('detailFirst', event.target);
         }
         // ,
         // seleteRate(data) {
@@ -232,6 +242,11 @@ export default {
                 font-size: 10px;
                 color: #fff;
                 background: #00a0dc;
+            }
+            .shopcat-warpper {
+                position: absolute;
+                right: 18px;
+                bottom: 12px;
             }
         }
         .info {

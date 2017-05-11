@@ -1,10 +1,10 @@
 <template>
     <div class="cart-container">
         <transition name="custom-classes-transition" enter-active-class="animated bounceInRight" leave-active-class="animated bounceOutRight">
-            <div class="icon-remove_circle_outline cart-reduce" v-show='food.count > 0' @click="reduceCart($event)"></div>
+            <div class="icon-remove_circle_outline cart-reduce" v-show='food.count > 0' @click.stop="reduceCart($event)"></div>
         </transition>
         <div class="cart-count" v-show='food.count > 0'>{{ food.count }}</div>
-        <div class="icon-add_circle cart-add" @click='addCart($event)'></div>
+        <div class="icon-add_circle cart-add" @click.stop='addCart($event)'></div>
     </div>
 </template>
 <script>
@@ -23,6 +23,7 @@ export default {
             }
             if (this.food.count) {
                 this.food.count++;
+                console.log(this.food.count);
             } else {
                 Vue.set(this.food, 'count', 1);
             }
