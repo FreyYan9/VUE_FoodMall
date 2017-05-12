@@ -3,28 +3,28 @@
         <div class="ratings-wrapper">
             <div class="ratings-score">
                 <div class="left">
-                    <div class="score">4.2</div>
+                    <div class="score">{{ seller.score }}</div>
                     <div class="title">综合评分</div>
-                    <div class="rank">高于周边商家69.2%</div>
+                    <div class="rank">高于周边商家{{ seller.rankRate }}%</div>
                 </div>
                 <div class="right">
                     <div class="score-wrapper">
                         <span class="title">服务态度</span>
                         <div class="star">
-                            <score :score='score'></score>
+                            <score :score='sellerScore'></score>
                         </div>
-                        <span class="score">4.1</span>
+                        <span class="score">{{ sellerScore.score }}</span>
                     </div>
                     <div class="score-wrapper">
                         <span class="title">商品评分</span>
                         <div class="star">
-                            <score :score='score'></score>
+                            <score :score='goodScore'></score>
                         </div>
-                        <span class="score">4.1</span>
+                        <span class="score">{{ goodScore.score }}</span>
                     </div>
                     <div class="delivery-wrapper">
                         <span class="title">送达时间</span>
-                        <span class="time">38分钟</span>
+                        <span class="time">{{ seller.deliveryTime }}分钟</span>
                     </div>
                 </div>
             </div>
@@ -73,10 +73,15 @@ import {
 export default {
     data() {
             return {
-                score: {
+                sellerScore: {
                     len: 5,
-                    score: 4.1
+                    score: 0
                 },
+                goodScore: {
+                    len: 5,
+                    score: 0
+                },
+                seller: {},
                 ratings: [],
                 selectType: 2,
                 isContent: true
@@ -92,6 +97,15 @@ export default {
                                 click: true
                             });
                         };
+                    });
+                };
+            });
+            this.$http.get('/api/seller').then((res) => {
+                if (res.body.erron === 0) {
+                    this.seller = res.body.data;
+                    this.$nextTick(() => {
+                        this.sellerScore.score = this.seller.serviceScore;
+                        this.goodScore.score = this.seller.foodScore;
                     });
                 };
             });
