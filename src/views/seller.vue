@@ -46,9 +46,9 @@
             <div class="pics">
                 <h1 class="title">商家实景</h1>
                 <div class="pic-wrapper" ref='picS'>
-                    <ul class="pic-list">
+                    <ul class="pic-list" ref='picList'>
                         <li class="pic-item" v-for='img in seller.pics'>
-                            <img :src="img" alt=""></li>
+                            <img @click="show(img)" :src="img" alt=""></li>
                     </ul>
                 </div>
             </div>
@@ -60,12 +60,17 @@
                 </ul>
             </div>
         </div>
+        <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+            <showImage v-show="isShowImage" :images="imageSrc"></showImage>
+        </transition>
     </div>
 </template>
 <script>
+import IScroll from 'better-scroll';
+
 import score from 'com/score/score';
 import split from 'com/split/split';
-import IScroll from 'better-scroll';
+import showImage from 'com/showImage/showImage';
 
 export default {
     name: 'Seller',
@@ -76,7 +81,9 @@ export default {
                 len: 5,
                 score: 0
             },
-            isFavorite: false
+            isFavorite: false,
+            isShowImage: false,
+            imageSrc: ''
         };
     },
     created() {
@@ -102,6 +109,9 @@ export default {
             this._initScroll();
             this._initPics();
         });
+        window.EM.$on('hideImg', () => {
+            this.isShowImage = false;
+        });
     },
     methods: {
         _initScroll() {
@@ -114,26 +124,17 @@ export default {
             };
         },
         _initPics() {
-            // if (!this.picScroll) {
-            //     this.picScroll = new IScroll(this.$refs.picS, {
-            //         scrollX: true,
-            //         eventPassthrough: 'vertical'
-            //     });
-            // } else {
-            //     this.picScroll.refresh();
-            // };
             if (this.seller.pics) {
                 let picWidth = 120;
                 let margin = 6;
                 let width = (picWidth + margin) * this.seller.pics.length - margin;
-                this.$refs.picS.style.width = width + 'px';
+                this.$refs.picList.style.width = width + 'px';
                 this.$nextTick(() => {
                     if (!this.picScroll) {
                         this.picScroll = new IScroll(this.$refs.picS, {
                             scrollX: true,
                             eventPassthrough: 'vertical'
                         });
-                        console.log(this.picScroll);
                     } else {
                         this.picScroll.refresh();
                     }
@@ -144,6 +145,10 @@ export default {
             if (event._constructed) {
                 this.isFavorite = !this.isFavorite;
             }
+        },
+        show(src) {
+            this.isShowImage = true;
+            this.imageSrc = src;
         }
     },
     computed: {
@@ -153,7 +158,8 @@ export default {
     },
     components: {
         score,
-        split
+        split,
+        showImage
     }
 };
 </script>
@@ -276,7 +282,7 @@ export default {
                         height: 16px;
                         margin-right: 6px;
                         background-size: 100%;
-                        vertical-align: text-top;
+                        vertical-align: middle;
                         &.decrease {
                             background-image: url('../../static/img/goods/decrease_1@2x.png');
                         }
